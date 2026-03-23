@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Hours Calculator | ระบบคำนวณเวลาทำงาน</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 15px; }
+        .container { background: var(--card); padding: 2rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { text-align: center; color: var(--primary); margin-bottom: 1.5rem; }
+        .input-group { margin-bottom: 1.2rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+        input { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
+        button { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #1d4ed8; }
+        .result-box { margin-top: 1.5rem; padding: 1rem; background: #f1f5f9; border-radius: 8px; text-align: center; display: none; }
+        .result-box.active { display: block; }
+        .hours-val { font-size: 2.2rem; font-weight: bold; color: #059669; }
+        footer { text-align: center; margin-top: 1.5rem; font-size: 0.8rem; color: #94a3b8; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>⏱️ คำนวณเวลาทำงาน</h2>
+    <div class="input-group">
+        <label>เวลาเริ่มงาน</label>
+        <input type="time" id="startTime" value="08:00">
+    </div>
+    <div class="input-group">
+        <label>เวลาเลิกงาน</label>
+        <input type="time" id="endTime" value="17:00">
+    </div>
+    <div class="input-group">
+        <label>เวลาพัก (นาที)</label>
+        <input type="number" id="breakTime" value="60">
+    </div>
+    <button onclick="calculate()">คำนวณผลลัพธ์</button>
+    <div class="result-box" id="resultBox">
+        <div>รวมเวลาทำงานจริง</div>
+        <div class="hours-val" id="totalHours">0</div>
+        <div id="detailText" style="color: #64748b;"></div>
+    </div>
+    <footer>&copy; 2026 Developed for ksm-bb</footer>
+</div>
+<script>
+    function calculate() {
+        const start = document.getElementById('startTime').value;
+        const end = document.getElementById('endTime').value;
+        const breakMin = parseInt(document.getElementById('breakTime').value) || 0;
+        if (!start || !end) return alert("กรุณาระบุเวลา");
+        let s = new Date(`2026-01-01T${start}:00`), e = new Date(`2026-01-01T${end}:00`);
+        if (e < s) e = new Date(`2026-01-02T${end}:00`);
+        let diff = (e - s) - (breakMin * 60000);
+        if (diff < 0) return alert("ข้อมูลไม่ถูกต้อง");
+        const totalMin = Math.floor(diff / 60000);
+        document.getElementById('resultBox').classList.add('active');
+        document.getElementById('totalHours').innerText = (totalMin / 60).toFixed(2) + " ชม.";
+        document.getElementById('detailText').innerText = `(${Math.floor(totalMin/60)} ชม. ${totalMin%60} นาที)`;
+    }
+</script>
+</body>
+</html>
